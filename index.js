@@ -1,62 +1,54 @@
 // require node's http 
 const http = require("http");
 
-//require File System module with promises method. 
+//require File System module with built-in promises method. 
 const fileSys = require('fs').promises;
 
 // create a function to respond to http requests
 // special variable __dirname has absolute path of where node code is running
 // if fs.readFile() successful, it returns data 
 // use then() method to handle success - contents parameter contains HTML file data
-const requestListener = function (req, res) {
+const httpListener = function (request, response) {
   // output request url
-  console.log(req.url);
+  console.log(request.url);
 
-  if (req.url === "/") {
+  if (request.url === "/") {
     // check request url, if root, return html file
     fileSys.readFile(__dirname + "/index.html")
       .then(contents => {
         // set http response header entry
-        res.setHeader("Content-Type", "text/html; charset=UTF-8");
+        response.setHeader("Content-Type", "text/html; charset=UTF-8");
         // return 200 OK http status code
-        res.writeHead(200);
+        response.writeHead(200);
         // send back file contents + close response
-        res.end(contents);
+        response.end(contents);
       });
   } else {
     // if request url not root, return json file
     fileSys.readFile(__dirname + "/users.json")
       .then(contents => {
         // set http response header entry
-        res.setHeader("Content-Type", "application/json; charset=UTF-8");
+        response.setHeader("Content-Type", "application/json; charset=UTF-8");
         // return 200 OK http status code
-        res.writeHead(200);
+        response.writeHead(200);
         // send back file contents + close response
-        res.end(contents);
+        response.end(contents);
       });
 
   }
   
 };
 
-// create an http server instance
-const server = http.createServer(requestListener);
+// declare our new http server
+const newServer = http.createServer(httpListener);
 
-// define the TCP port and IP address to tell our http server to listen to
-const host = "0.0.0.0";
-const port = "8080";
+// declare port and host where we will be listening
+const myIP = "0.0.0.0";
+const myTcpPort = "8080";
 
-// call the listen() method to start listening to http requests
-server.listen(
-  port, host, () => {
-    console.log(`Server is running on http://${host}:${port}`);
-    // console.log("Server is running on http://" + host + ":" + port);
+// use the listen method on our new server to get it up and running
+newServer.listen(
+  myTcpPort, myIP, () => {
+    console.log(`Voila! Your new server is up at http://${myIP}:${myTcpPort}`);
   }
 );
-
-// non-arrow function syntax of same code as lines 51-56 above
-/*
-server.listen(port, host, function() {
-  console.log(`Server is running on http://${host}:${port}`);
-});
-*/
