@@ -4,35 +4,30 @@ const http = require("http");
 //require File System module with built-in promises method. 
 const fileSys = require('fs').promises;
 
-// create a function to respond to http requests
-// special variable __dirname has absolute path of where node code is running
-// if fs.readFile() successful, it returns data 
-// use then() method to handle success - contents parameter contains HTML file data
+//declare response function for incoming http requests 
+//use FS module to read file, this returns a promise. 
+//After promise is returned, we use .then() method to set and write the header, and send back varying contents, depending on which url sends the request
 const httpListener = function (request, response) {
-  // output request url
+  
   console.log(request.url);
 
   if (request.url === "/") {
-    // check request url, if root, return html file
+    // for root url, send 
     fileSys.readFile(__dirname + "/index.html")
-      .then(contents => {
-        // set http response header entry
+      .then(data => {
+        // set response header, response code, and send back an HTML file type to close
         response.setHeader("Content-Type", "text/html; charset=UTF-8");
-        // return 200 OK http status code
         response.writeHead(200);
-        // send back file contents + close response
-        response.end(contents);
+        response.end(data);
       });
   } else {
-    // if request url not root, return json file
+    // for any other url path other than the root, send back the raw JSON data
     fileSys.readFile(__dirname + "/users.json")
-      .then(contents => {
-        // set http response header entry
+      .then(data => {
+        // set response header, response code, and send back raw JSON data to close
         response.setHeader("Content-Type", "application/json; charset=UTF-8");
-        // return 200 OK http status code
         response.writeHead(200);
-        // send back file contents + close response
-        response.end(contents);
+        response.end(data);
       });
 
   }
