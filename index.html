@@ -40,14 +40,13 @@
         </div>;
     }
 
-  // use jQuery to load JSON
+  // use jQuery method to retrieve JSON data
     
-  $.getJSON("anything", function(jsonFromJquery) {
-    // after JSON loaded, call react createRoot() to identify root HTML element for app
-    const myRoot = ReactDOM.createRoot(document.getElementById('root'));
-    // then call react render() to output component into existing element
-    // render() takes 2 arguments: (1) JSX component, (2) the html element to render into
-    myRoot.render(
+  $.getJSON("get_data_from_JSON", function(jsonFromJquery) {
+    
+    const rootDiv = ReactDOM.createRoot(document.getElementById('root'));
+    //render the  div element with class root, and populate it with the model data
+    rootDiv.render(
       <Fellowship list={jsonFromJquery} />
     );
   }
