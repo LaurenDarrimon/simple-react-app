@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta name="viewport" content="width=device-width,initial-scale=1">
+	<title>Simple App: Node Server w/ React and JQuery for External JSON</title>
+  
+  <!-- LIBRARIES: load cdns for: jquery, react, react dev, babel  -->
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://unpkg.com/react/umd/react.development.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom/umd/react-dom.development.js" crossorigin>  </script>
+	<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  
+</head>
+  
+<body>
+	<!-- root element where all the react goodies will plug in -->
+	<div id="root"></div>
+
+  <!-- script to build custom react component -->
+  <script type="text/babel">
+  "use strict";
+
+    //create custom JSX component, that will take the JSON members data as an argument and return a div filled with good stuff 
+    
+    function Fellowship(members) {
+      return <div>
+          <h1>List of Fellowship Users</h1> 
+          <ol>
+            {
+              //map through the data passed as props to function Fellowship
+              members.list.map( 
+                (member,index) => (
+                  <li key={index}>
+                    {member.type}: {member.user}
+                  </li>   
+                )
+              )
+            }
+          </ol>
+        </div>;
+    }
+
+  // use jQuery to load JSON
+    
+  $.getJSON("anything", function(jsonFromJquery) {
+    // after JSON loaded, call react createRoot() to identify root HTML element for app
+    const myRoot = ReactDOM.createRoot(document.getElementById('root'));
+    // then call react render() to output component into existing element
+    // render() takes 2 arguments: (1) JSX component, (2) the html element to render into
+    myRoot.render(
+      <Fellowship list={jsonFromJquery} />
+    );
+  }
+  );
+  </script>
+</body>
+
+</html>
